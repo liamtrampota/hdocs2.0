@@ -46,13 +46,13 @@ app.post('/register', function(req, res, next){
 
 app.post('/login', (req, res) => {
   console.log('login req.body:', req.body)
-  User.find({username:req.body.username, password:req.body.password}, function(err, docs){
+  User.findOne({username:req.body.username, password:req.body.password}, function(err, user){
     if(err){
       console.log('error', err)
-      res.status(400).json('error occured', cookieParser)
-    } else if(docs){
-      console.log('found login', docs)
-      res.status(200).json('valid username/password')
+      res.status(400).json('error occured')
+    } else if(user){
+      console.log('found login', user)
+      res.status(200).json(user)
     } else {
       res.status(400).json('incorrect username/ password')
     }
