@@ -27,14 +27,10 @@ var docSchema = new Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User'
   },
-<<<<<<< HEAD
-  title:String,
-=======
   title: {
     type: String,
     required: true
   },
->>>>>>> e5d470b246332e22e0ff3bc580828b1bc846e33d
   body: {
     type: Schema.Types.Mixed,
     required: false
