@@ -27,6 +27,7 @@ var docSchema = new Schema({
     type:mongoose.Schema.ObjectId,
     ref: 'User'
   },
+  title:String,
   body: {
     type: Object,
     required: false
