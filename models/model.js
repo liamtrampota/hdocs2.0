@@ -24,6 +24,10 @@ var User = mongoose.model('User', userSchema);
 // establishes doc schema
 var docSchema = new Schema({
   author: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  },
+  title: {
     type: String,
     required: true
   },
@@ -32,7 +36,7 @@ var docSchema = new Schema({
     required: false
   },
   collabs: {
-    type: mongoose.Schema.ObjectId,
+    type: [mongoose.Schema.ObjectId],
     ref: 'User'
   }
 })

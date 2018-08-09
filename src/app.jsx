@@ -9,14 +9,12 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       mode:'login', //login, portal,
-      username: '',
-      userId: '',
       currentDoc: ''
     };
   }
 
-  changeToPortal(username){
-    this.setState({mode:'portal'})
+  changeToPortal(user){
+    this.setState({mode:'portal', user:user})
   }
 
   openDocument(id){
@@ -34,7 +32,7 @@ export default class App extends React.Component {
         <Document/>
       )} else {
         return(
-          <Portal openDocument={(id)=>this.openDocument(id)}/>
+          <Portal openDocument={(id)=>this.openDocument(id)} user={this.state.user}/>
         )
       }
     }
@@ -74,9 +72,7 @@ class LoginAndRegister extends React.Component {
         .then((responseJson) => {
           if(responseJson){
             console.log(responseJson)
-            console.log(this)
-            console.log(this.props)
-            this.props.changeToPortal()
+            this.props.changeToPortal(responseJson)
           }
         })
         .catch((error) => {
@@ -174,6 +170,7 @@ class Portal extends React.Component{
       console.log('hello from sever:', contentState)
       this.setState({editorState:EditorState.createWithContent(contentState)})
     })
+    this.socket.emit('getDocs', this.props.user._id)
   }
 
   handleChange(e){
