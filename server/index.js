@@ -81,19 +81,23 @@ io.on('connection', function (socket) {
     Doc.find({collabs:{$in:[userId]}}, (err, docs) =>{
       if(err){
         console.log('error:', err)
-      } else {
+      } else if(docs.length>0){
         console.log('sending docs', docs)
         next(docs)
+      } else {
+        next([])
       }
     })
   })
   socket.on('updateDoc', ()=>{
     console.log('updating doc')
     socket.to(socket.docId).emit('requestUpdate')
+    console.log('id:', socket.docId)
   })
   socket.on('saveDoc',(doc)=>{
-    console.log('saving doc')
-    Doc.update({_id:socket.docId}, {body:doc}, (err, doc)=>{
+    console.log('saving doc:', doc)
+    console.log('stringified:', JSON.stringify(doc))
+    Doc.update({_id:socket.docId}, {body:JSON.stringify(doc)}, (err, doc)=>{
       if(err){
         console.log(err)
       } else{
@@ -106,7 +110,7 @@ io.on('connection', function (socket) {
     socket.docId = id;
     socket.join(id)
   })
-  socket.on('createDocument', (title) => {
+  socket.on('createDocument', (title, next) => {
     console.log('creating doc: ', title)
     console.log('user Id', socket.userId)
     var newDoc = new Doc({
@@ -119,7 +123,21 @@ io.on('connection', function (socket) {
         console.log('failed to save', err)
       } else {
         console.log('saved', doc)
-        socket.emit("documentCreated", doc)
+        next(doc)
+      }
+    })
+  })
+  socket.on('addCollaboration', (docId, next)=>{
+    console.log('add collaborator')
+    Doc.findByIdAndUpdate(docId, {"$push": {collabs:socket.userId}}, (err, doc)=>{
+      if(err){
+        console.log(err)
+        next(false)
+      } else if(doc){
+        console.log('new doc:', doc)
+        next(doc)
+      } else{
+        next(false)
       }
     })
   })

@@ -32,7 +32,7 @@ var docSchema = new Schema({
     required: true
   },
   body: {
-    type: Object,
+    type: Schema.Types.Mixed,
     required: false
   },
   collabs: {

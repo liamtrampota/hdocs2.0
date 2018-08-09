@@ -72,6 +72,11 @@ class LoginAndRegister extends React.Component {
         .then((responseJson) => {
           if(responseJson){
             console.log(responseJson)
+<<<<<<< HEAD
+=======
+            console.log(this)
+            console.log(this.props)
+>>>>>>> c814fdfe0aba57229e5c19958b23f928cfa77089
             this.props.changeToPortal(responseJson)
           }
         })
@@ -170,7 +175,13 @@ class Portal extends React.Component{
       console.log('hello from sever:', contentState)
       this.setState({editorState:EditorState.createWithContent(contentState)})
     })
+<<<<<<< HEAD
     this.socket.emit('getDocs', this.props.user._id)
+=======
+    this.socket.emit('getDocs', this.props.user._id , (data)=>{
+      
+    })
+>>>>>>> c814fdfe0aba57229e5c19958b23f928cfa77089
   }
 
   handleChange(e){
