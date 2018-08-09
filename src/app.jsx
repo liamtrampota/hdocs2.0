@@ -74,8 +74,6 @@ class LoginAndRegister extends React.Component {
         .then((responseJson) => {
           if(responseJson){
             console.log(responseJson)
-            console.log(this)
-            console.log(this.props)
             this.props.changeToPortal(responseJson)
           }
         })

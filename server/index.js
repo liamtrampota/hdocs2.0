@@ -46,7 +46,7 @@ app.post('/register', function(req, res, next){
 
 app.post('/login', (req, res) => {
   console.log('login req.body:', req.body)
-  User.findOne({username:req.body.username, password:req.body.password}, function(err, user){
+  User.find({username:req.body.username, password:req.body.password}, function(err, user){
     if(err){
       console.log('error', err)
       res.status(400).json('error occured')
@@ -59,26 +59,87 @@ app.post('/login', (req, res) => {
   })
 })
 
-app.post('/createDocument', function(req, res){
-  console.log('req.user:', req.user)
-  console.log('req.session:', req.session)
-  console.log('body:', req.body)
-  res.json('received document')
-})
-
 //Real time text editing collaboration
 io.on('connection', function (socket) {
   console.log('connected')
   socket.emit('msg', { hello: 'world' });
-  socket.on('cmd', function (data) {
-    console.log(data);
+  socket.userId = '';
+  socket.docId = '';
+  socket.on('userId', function (data) {
+    socket.userId = data
+    console.log('socket user set:', socket.userId)
   });
   socket.on('hearMe', ()=>{
     socket.emit('heard')
   })
-  socket.on('editorStateChange', (editorState) => {
-    console.log('hi from client:',editorState)
+  socket.to(socket.docId).on('editorStateChange', (editorState) => {
+    console.log('hi from client:', editorState)
     socket.broadcast.emit('editorStateChanged', editorState)
+  })
+  socket.on('getDocs', (userId, next) => {
+    console.log('request to getDocs')
+    Doc.find({collabs:{$in:[userId]}}, (err, docs) =>{
+      if(err){
+        console.log('error:', err)
+      } else if(docs.length>0){
+        console.log('sending docs', docs)
+        next(docs)
+      } else {
+        next([])
+      }
+    })
+  })
+  socket.on('updateDoc', ()=>{
+    console.log('updating doc')
+    socket.to(socket.docId).emit('requestUpdate')
+    console.log('id:', socket.docId)
+  })
+  socket.on('saveDoc',(doc)=>{
+    console.log('saving doc:', doc)
+    console.log('stringified:', JSON.stringify(doc))
+    Doc.update({_id:socket.docId}, {body:JSON.stringify(doc)}, (err, doc)=>{
+      if(err){
+        console.log(err)
+      } else{
+        console.log('saved', doc)
+      }
+    })
+  })
+  socket.on('joinDocument', (id) =>{
+    console.log('joining doc:', id)
+    socket.docId = id;
+    socket.join(id)
+  })
+  socket.on('createDocument', (title, next) => {
+    console.log('creating doc: ', title)
+    console.log('user Id', socket.userId)
+    var newDoc = new Doc({
+      title: title,
+      author: socket.userId,
+      collabs: [socket.userId]
+    })
+    newDoc.save(function(err, doc){
+      if(err){
+        console.log('failed to save', err)
+      } else {
+        console.log('saved', doc)
+        next(doc)
+      }
+    })
+  })
+  socket.on('addCollaboration', (docId, next)=>{
+    console.log('add collaborator')
+    Doc.findByIdAndUpdate(docId, {"$push": {collabs:socket.userId}}, (err, doc)=>{
+      if(err){
+        console.log(err)
+        next(false)
+      } else if(doc){
+        console.log('new doc:', doc)
+        next(doc)
+      } else{
+        next(false)
+      }
+    })
   })
 });
 
