@@ -22,6 +22,13 @@ class Portal extends React.Component{
 
   }
 
+  getDocs(){
+    this.socket.emit('getDocs', this.props.user._id, (docs)=>{
+      console.log('Docs Received ', docs);
+      this.setState({docs:docs})
+    })
+  }
+
   componentDidMount() {
 
     this.socket.on('connect', () => {
@@ -30,12 +37,11 @@ class Portal extends React.Component{
         console.log(this.props)
         this.socket.emit('userId',  this.props.user._id)
       });
-
-      this.socket.emit('getDocs', this.props.user._id, (docs)=>{
-        console.log('Docs Received ', docs);
-        this.setState({docs:docs})
-      }
-    )
+      this.getDocs();
+      // this.socket.emit('getDocs', this.props.user._id, (docs)=>{
+      //   console.log('Docs Received ', docs);
+      //   this.setState({docs:docs})
+      // }
     });
     this.socket.on('disconnect', () => {
       console.log('diconnected');
@@ -147,7 +153,7 @@ class Portal extends React.Component{
     } else {
       console.log('currentDoc :',this.state.currentDoc);
       return(
-        <Document doc={this.state.currentDoc} socket={this.socket} goToPortal={(e)=>this.goToPortal(e)}/>
+        <Document doc={this.state.currentDoc} socket={this.socket} goToPortal={(e)=>this.goToPortal(e)} getDocs={this.getDocs}/>
       )
     }
   }

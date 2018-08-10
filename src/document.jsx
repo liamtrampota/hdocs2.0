@@ -61,7 +61,9 @@ class Document extends React.Component {
   save(){
     const contentState = this.state.editorState.getCurrentContent()
     console.log('saving to server:', convertToRaw(contentState))
-    this.props.socket.emit('saveDoc', convertToRaw(contentState))
+    this.props.socket.emit('saveDoc', convertToRaw(contentState), ()=>{
+      this.props.getDocs()
+    })
   }
   handleType(e, type) {
     e.preventDefault()

@@ -94,7 +94,7 @@ io.on('connection', function (socket) {
     socket.to(socket.docId).emit('requestUpdate')
     console.log('id:', socket.docId)
   })
-  socket.on('saveDoc',(doc)=>{
+  socket.on('saveDoc',(doc, next)=>{
     console.log('saving doc:', doc)
     console.log('stringified:', JSON.stringify(doc))
     Doc.update({_id:socket.docId}, {body:JSON.stringify(doc)}, (err, doc)=>{
@@ -102,6 +102,7 @@ io.on('connection', function (socket) {
         console.log(err)
       } else{
         console.log('saved', doc)
+        next()
       }
     })
   })
