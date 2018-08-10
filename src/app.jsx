@@ -25,7 +25,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode:'login', //login, portal,
+      mode:'portal', //login, portal,
       currentDoc: ''
     };
     this.changeToLogin=this.changeToLogin.bind(this)
