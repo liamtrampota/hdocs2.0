@@ -127,6 +127,13 @@ io.on('connection', function (socket) {
       }
     })
   })
+  socket.on('deleteDoc', (docId, next)=>{
+    console.log('deleting doc')
+    Doc.deleteOne({_id:docId}, function(err){
+      if (err) {console.log(err)}
+      else next('success')
+    })
+  })
   socket.on('addCollaboration', (docId, next)=>{
     console.log('add collaborator')
     Doc.findByIdAndUpdate(docId, {"$push": {collabs:socket.userId}}, (err, doc)=>{
