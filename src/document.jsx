@@ -7,9 +7,29 @@ import MenuItem from 'material-ui/MenuItem';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AppBar from 'material-ui/AppBar';
-import {FormatBold, FormatItalic, FormatUnderlined, FormatColorText, FormatSize, TextFormat, FormatListBulleted, FormatListNumbered, MenuIcon, AccountCircle, Home, Save } from 'material-ui-icons';
+import createStyles from 'draft-js-custom-styles'
+import {FormatBold, FormatAlignCenter, FormatAlignRight, FormatAlignLeft, FormatItalic, FormatUnderlined, FormatColorText, FormatSize, TextFormat, FormatListBulleted, FormatListNumbered, MenuIcon, AccountCircle, Home, Save } from 'material-ui-icons';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 
+const customStyleMap = {
+
+}
+
+/* Have draft-js-custom-styles build help functions for toggling font-size, color */
+const {
+  styles,
+  customStyleFn,
+} = createStyles(['font-size', 'color'], customStyleMap)
+
+function isBlockStyle(style) {
+  if(style.indexOf('text-align-') === 0) return true
+  return false
+}
+
+function getBlockStyle(block) {
+  const type = block.getType()
+  return isBlockStyle(type) ? type : null
+}
 
 class Document extends React.Component {
   constructor(props) {
@@ -126,17 +146,14 @@ class Document extends React.Component {
       })
     }
   }
-
   changeColor(newColor) {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, newColor));
     this.setState({ anchorEl: null, });
   }
-
   changeSize(size){
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, size));
     this.setState({ sizeSwitch: null, });
   }
-
   bulletedList(e){
     e.preventDefault()
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'unordered-list-item'));
@@ -148,7 +165,7 @@ class Document extends React.Component {
   }
   handleClose() {
    this.setState({ anchorEl: null });
- };
+ }
   changeFont(value){
     console.log("FONT", value);
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, value));
@@ -160,6 +177,19 @@ class Document extends React.Component {
  handleClose () {
     this.setState({ personalSwitch: null });
   };
+  alignText(e,type){
+    e.preventDefault();
+    console.log('type:',type)
+    if(type==='Left'){
+      this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'text-align-left'))
+    }
+    if(type==='Right'){
+      this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'text-align-right'))
+    }
+    if(type==='Center'){
+      this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'text-align-center'))
+    }
+  }
 
 
 
@@ -288,6 +318,15 @@ class Document extends React.Component {
         <IconButton aria-label="number" onMouseDown={(e) => this.numberedList(e)}>
          <FormatListNumbered />
         </IconButton>
+        <IconButton aria-label="left" onMouseDown={(e) => this.alignText(e,'Left')}>
+         <FormatAlignLeft />
+        </IconButton>
+        <IconButton aria-label="Center" onMouseDown={(e) => this.alignText(e,'Center')}>
+         <FormatAlignCenter />
+        </IconButton>
+        <IconButton aria-label="right" onMouseDown={(e) => this.alignText(e,'Right')}>
+         <FormatAlignRight/>
+        </IconButton>
         <IconButton aria-label="save" onMouseDown={()=>this.save()}>
           <Save />
         </IconButton>
@@ -300,6 +339,8 @@ class Document extends React.Component {
           customStyleMap={styleMap}
           editorState={this.state.editorState}
           onChange={this.onChange}
+          customStyleFn={customStyleFn}
+          blockStyleFn={getBlockStyle}
         />
       </div>
     </div>
@@ -355,7 +396,7 @@ const styleMap = {
   },
   Impact: {
     fontFamily: 'Impact'
-  }
+  },
 }
 
 export default Document;
