@@ -12,6 +12,9 @@ class Document extends React.Component {
     this.onChange = (editorState) => {
       console.log('on Change')
       this.setState({editorState}, ()=>{
+        var selection = editorState.getSelection()
+        console.log('selection start:', selection.getStartKey(), selection.getStartOffset())
+        console.log('selection end:', selection.getEndOffset())
         const contentState = editorState.getCurrentContent()
         console.log('sending to server:', convertToRaw(contentState))
         this.props.socket.emit('editorStateChange', convertToRaw(contentState))

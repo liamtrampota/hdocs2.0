@@ -5,6 +5,21 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import Portal from './portal'
 import LoginAndRegister from './login'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import purple from '@material-ui/core/colors/purple';
+import green from '@material-ui/core/colors/green';
+import { createMuiTheme } from '@material-ui/core/styles';
+
+// const theme = createMuiTheme({
+//   palette: {
+//     primary: green,
+//     secondary: purple,
+//   },
+//   status: {
+//     danger: 'orange',
+//   },
+// });
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -21,6 +36,7 @@ export default class App extends React.Component {
   }
 
   changeToLogin(){
+    console.log('change to login')
     this.setState({mode:'login', user:''})
   }
 
@@ -31,12 +47,17 @@ export default class App extends React.Component {
   render() {
     if(this.state.mode==='login'){
       return (
-        <div>
-          <LoginAndRegister changeToPortal={(username)=>this.changeToPortal(username)}/>
-        </div>);
+        <MuiThemeProvider>
+          <div>
+            <LoginAndRegister changeToPortal={(username)=>this.changeToPortal(username)}/>
+          </div>
+        </MuiThemeProvider>
+      )
     } else {
         return(
-          <Portal openDocument={(id)=>this.openDocument(id)} user={this.state.user} changeToLogin={this.changeToLogin}/>
+          <MuiThemeProvider>
+            <Portal openDocument={(id)=>this.openDocument(id)} user={this.state.user} changeToLogin={this.changeToLogin}/>
+          </MuiThemeProvider>
         )
       }
     }

@@ -1,5 +1,7 @@
 import React from 'react';
-import axios from 'axios';
+import Typography from '@material-ui/core/Typography';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 
 class LoginAndRegister extends React.Component {
@@ -94,21 +96,29 @@ class LoginAndRegister extends React.Component {
 
   render(){
     return(
-      <div>
-        {(this.state.loginMode) ?
-        <button onClick={()=>this.change()}>Register</button> :
-        <button onClick={()=>this.change()}>Login</button>}
+      <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
 
-        <h1>Welcome to TLM Docs</h1>
-
-        <input type="text" name="username" placeholder="Username" value={this.state.username} onChange={(e)=>this.handleChange(e, 'username')} /><br/>
-        <input type="password" name="password" placeholder="Password" value={this.state.password} onChange={(e)=>this.handleChange(e, 'password')}/><br/>
-        {(this.state.loginMode===false) ?
-        <input style = {{display: 'block'}} type="password" name="repeatPassword" placeholder="repeat your password" value={this.state.repeatPassword} onChange={(e)=>this.handleChange(e, 'repeat')}/> : <div></div>}
-        {this.state.loginMode ? <button onClick={(e)=>{this.handleClick(e, 'login'); console.log('running')}}>Login</button> : <button onClick={(e)=> this.handleClick(e, 'register')}>Register</button>}
+        <Typography variant="display2" >ML Docs</Typography>
+        <div style={{display:'flex',  flexDirection:'column', justifyContent:'center', alignItems:'center', marginTop:'10px'}}>
+          <TextField hintText="Username" onChange={e => this.handleChange(e, 'username')} /><br />
+          <TextField hintText="Password" onChange={e => this.handleChange(e, 'password')} /><br />
+          {(this.state.loginMode===false) ?
+          <TextField hintText="Repeat Password" onChange={e => this.handleChange(e, 'prepeat')} /> :
+          <div></div>}
+          {this.state.loginMode ?
+            <div style={{display:'flex', flexDirection:'column',  justifyContent:'center'}}>
+              <RaisedButton label='Login' onMouseDown={e => this.handleClick(e, 'login')} primary={true}  style={{width:'80px', alignSelf:'center'}}/> <br />
+              <a onMouseDown={(e)=>this.change(e)} style={{textDecoration:'underline', cursor:'pointer'}}>
+              <Typography variant='caption' gutterBottom>Don't have an account? Register.</Typography> </a></div>:
+            <div style={{display:'flex', flexDirection:'column',  justifyContent:'center', marginTop:'10px'}}>
+              <RaisedButton label='Register' onMouseDown={e => this.handleClick(e, 'register')} primary={true} style={{alignSelf:'center'}}/> <br />
+              <a onMouseDown={(e)=>this.change(e)} style={{textDecoration:'underline', cursor:'pointer', alignSelf:'center'}}>
+              <Typography variant='caption' gutterBottom>Switch to login.</Typography> </a></div>}
+        </div>
       </div>
     )
   }
 }
+
 
 export default LoginAndRegister;
