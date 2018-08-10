@@ -10,22 +10,12 @@ import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
 import { createMuiTheme } from '@material-ui/core/styles';
 
-// const theme = createMuiTheme({
-//   palette: {
-//     primary: green,
-//     secondary: purple,
-//   },
-//   status: {
-//     danger: 'orange',
-//   },
-// });
-
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode:'portal', //login, portal,
+      mode:'login', //login, portal,
       currentDoc: ''
     };
     this.changeToLogin=this.changeToLogin.bind(this)

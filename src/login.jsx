@@ -97,8 +97,7 @@ class LoginAndRegister extends React.Component {
   render(){
     return(
       <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-
-        <Typography variant="display2" >ML Docs</Typography>
+        <Typography variant="display2">ML Docs</Typography>
         <div style={{display:'flex',  flexDirection:'column', justifyContent:'center', alignItems:'center', marginTop:'10px'}}>
           <TextField hintText="Username" onChange={e => this.handleChange(e, 'username')} /><br />
           <TextField hintText="Password" onChange={e => this.handleChange(e, 'password')} /><br />
