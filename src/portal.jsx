@@ -6,6 +6,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import Icon from '@material-ui/core/Icon';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 
@@ -59,7 +63,7 @@ class Portal extends React.Component{
     console.log('handling create doc click...')
     this.socket.emit('createDocument', this.state.newDocTitle, (doc)=>{
       console.log('document created received')
-      this.setState({mode:'document', currentDoc:doc})
+      this.setState({mode:'document', currentDoc:doc, docs:this.state.docs.concat(doc)})
     })
   }
   goToDocument(e,doc){
@@ -117,7 +121,7 @@ class Portal extends React.Component{
 
   render(){
     if(this.state.mode==='portal'){
-      var title = 'ML Portal - ' + this.props.user.username
+      var title = this.props.user.username + "'s Portal"
       return (
         <div>
           <AppBar showMenuIconButton={false} title={title} style={{alignItems:'center'}}>
@@ -136,21 +140,43 @@ class Portal extends React.Component{
                 if(this.props.user._id===doc.author){
                 return(
                 <div style={{display:'flex', alignItems:'center', margin:'5px'}}>
-                <button onClick={(e)=>this.goToDocument(e,doc)} style={{cursor:'pointer'}}>                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                </button><Typography style={{marginLeft:'5px', marginRight:'5px', fontSize:'20px'}}>{doc.title}</Typography>
-                <button style={{marginRight:'5px', backgroundColor:'red',}} onClick={()=>this.deleteDoc(doc._id)}><Typography style={{color:'white'}}>X</Typography></button>
-                <button onClick={()=>this.getShared(doc._id)}><Typography>Toggle Share Id</Typography></button>
+                <Button variant="fab" color="secondary" aria-label="Edit" onMouseDown={(e)=>this.goToDocument(e, doc)} style={{width:'35px', height:'35px', boxShadow:'none'}}>
+                 <Icon>edit_icon</Icon>
+               </Button>
+                <Typography style={{marginLeft:'5px', marginRight:'5px', fontSize:'20px'}}>{doc.title}</Typography>
+                <Button variant='fab' aria-label="Delete"
+                    style={{width:'35px', height:'35px', marginRight:'4px', cursor:'pointer', boxShadow:'none'}}
+                   onMouseDown={()=>this.deleteDoc(doc._id)}>
+                 <DeleteIcon />
+               </Button>
+               <Button variant='fab'
+                   style={{width:'35px', height:'35px', marginRight:'4px', cursor:'pointer', backgroundColor:'lightblue', boxShadow:'none'}}
+                  onMouseDown={()=>this.getShared(doc._id)}>
+                <Icon>share</Icon>
+              </Button>
+
+
                 {this.state.idSwitch && this.state.currentId===doc._id ? <Typography> {this.state.currentId}</Typography> : ''}</div>)}})}
 
-              <Typography style={{fontWeight:'bold', fontSize:'20px'}}>Shared To Me</Typography>
+              <Typography style={{fontWeight:'bold', fontSize:'20px'}}>Docs Shared To Me</Typography>
               {this.state.docs.map((doc)=>{
                 if(this.props.user._id!==doc.author){
                 return(
                 <div style={{display:'flex', alignItems:'center', margin:'5px'}}>
-                <button onClick={(e)=>this.goToDocument(e,doc)} style={{cursor:'pointer'}}>                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                </button><Typography style={{marginLeft:'5px', marginRight:'5px', fontSize:'20px'}}>{doc.title}</Typography><button onClick={()=>this.getShared(doc._id)}>
-                  <button style={{marginRight:'5px', backgroundColor:'red',}} onClick={()=>this.deleteDoc(doc._id)}><Typography style={{color:'white'}}>X</Typography></button>
-                  <Typography>Toggle Share Id</Typography></button>
+                  <Button variant="fab" color="secondary" aria-label="Edit" style={{width:'35px', height:'35px', boxShadow:'none'}} onMouseDown={(e)=>this.goToDocument(e, doc)}>
+                   <Icon>edit_icon</Icon>
+                 </Button>
+                <Typography style={{marginLeft:'5px', marginRight:'5px', fontSize:'20px'}}>{doc.title}</Typography>
+                <Button variant='fab' aria-label="Delete"
+                    style={{width:'35px', height:'35px', marginRight:'4px', cursor:'pointer', boxShadow:'none'}}
+                   onMouseDown={()=>this.deleteDoc(doc._id)}>
+                 <DeleteIcon />
+               </Button>
+               <Button variant='fab'
+                   style={{width:'35px', height:'35px', marginRight:'4px', cursor:'pointer', backgroundColor:'lightblue', boxShadow:'none'}}
+                  onMouseDown={()=>this.getShared(doc._id)}>
+                <Icon>share</Icon>
+              </Button>
                 {this.state.idSwitch && this.state.currentId===doc._id ? <Typography> {this.state.currentId}</Typography> : ''}</div>)}})}
 
 

@@ -10,7 +10,6 @@ import AppBar from 'material-ui/AppBar';
 import {FormatBold, FormatItalic, FormatUnderlined, FormatColorText, FormatSize, TextFormat, FormatListBulleted, FormatListNumbered, MenuIcon, AccountCircle, Home, Save } from 'material-ui-icons';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 
-
 class Document extends React.Component {
   constructor(props) {
     super(props);
@@ -160,6 +159,8 @@ class Document extends React.Component {
  handleClose () {
     this.setState({ personalSwitch: null });
   };
+
+
 
 
 
