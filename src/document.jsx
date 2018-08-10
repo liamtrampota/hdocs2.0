@@ -164,7 +164,7 @@ class Document extends React.Component {
   render(){
     return(
       <div>
-        <AppBar showMenuIconButton={false} position="static" style={{alignItems:'center'}}>
+        <AppBar showMenuIconButton={false} position="static" style={{alignItems:'center'}} className="document">
             <IconButton className='menu-button' onMouseDown= {()=>this.props.goToPortal()}>
               <Home />
             </IconButton>
