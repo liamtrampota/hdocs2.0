@@ -9,7 +9,7 @@ class Portal extends React.Component{
     this.socket = io('http://10.1.10.41:8080');
     this.state={
       newDocTitle:'',
-      mode: 'portal', //portal, document
+      mode: 'document', //portal, document
       docs:[],
       idSwitch:false
     }
