@@ -286,7 +286,7 @@ class Document extends React.Component {
         <IconButton aria-label="save" onMouseDown={()=>this.save()}>
           <Save />
         </IconButton>
-      <div style={{width:"600px",
+      <div style={{width:"80%",
         height:"350px",
         marginLeft:"10px",
         border:" 1px solid grey",
