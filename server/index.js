@@ -94,7 +94,7 @@ io.on('connection', function (socket) {
     socket.to(socket.docId).emit('requestUpdate')
     console.log('id:', socket.docId)
   })
-  socket.on('saveDoc',(doc, next)=>{
+  socket.on('saveDoc',(doc)=>{
     console.log('saving doc:', doc)
     console.log('stringified:', JSON.stringify(doc))
     Doc.update({_id:socket.docId}, {body:JSON.stringify(doc)}, (err, doc)=>{
@@ -102,14 +102,22 @@ io.on('connection', function (socket) {
         console.log(err)
       } else{
         console.log('saved', doc)
-        next()
+        socket.emit('docUpdated',)
       }
     })
   })
-  socket.on('joinDocument', (id) =>{
+  socket.on('joinDocument', (id, next) =>{
     console.log('joining doc:', id)
     socket.docId = id;
     socket.join(id)
+    Doc.findOne({_id: id}, (err, doc)=>{
+      if(err){
+        console.log('error', err)
+      } else {
+        console.log(doc)
+        next(doc)
+      }
+    })
   })
   socket.on('createDocument', (title, next) => {
     console.log('creating doc: ', title)

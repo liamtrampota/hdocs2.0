@@ -23,6 +23,8 @@ class Portal extends React.Component{
   }
 
   getDocs(){
+    console.log('asking server for docs')
+    console.log(this.props)
     this.socket.emit('getDocs', this.props.user._id, (docs)=>{
       console.log('Docs Received ', docs);
       this.setState({docs:docs})
@@ -61,9 +63,11 @@ class Portal extends React.Component{
     })
   }
   goToDocument(e,doc){
-    console.log('currentDoc:' )
-    this.setState({mode:'document', currentDoc:doc})
-    this.socket.emit('joinDocument', doc._id)
+    console.log('goto doc:', doc )
+    this.socket.emit('joinDocument', doc._id, (doc)=>{
+      console.log('doc received:', doc)
+      this.setState({mode:'document', currentDoc:doc})
+    })
   }
   goToPortal(e){
     // console.log('currentDoc:' )
@@ -105,13 +109,19 @@ class Portal extends React.Component{
       }
   }
 
+  logout(){
+    console.log('logging out')
+    this.socket.disconnect();
+    this.props.changeToLogin()
+  }
+
   render(){
     if(this.state.mode==='portal'){
       var title = 'ML Portal - ' + this.props.user.username
       return (
         <div>
           <AppBar showMenuIconButton={false} title={title} style={{alignItems:'center'}}>
-              <Typography variant='subheading' onMouseDown={()=>this.props.changeToLogin()} style={{cursor:'pointer'}}>
+              <Typography variant='subheading' onMouseDown={()=>this.logout()} style={{cursor:'pointer'}}>
                 Logout
               </Typography>
           </AppBar>
@@ -153,7 +163,7 @@ class Portal extends React.Component{
     } else {
       console.log('currentDoc :',this.state.currentDoc);
       return(
-        <Document doc={this.state.currentDoc} socket={this.socket} goToPortal={(e)=>this.goToPortal(e)} getDocs={this.getDocs}/>
+        <Document doc={this.state.currentDoc} socket={this.socket} goToPortal={(e)=>this.goToPortal(e)} getDocs={()=>this.getDocs()}/>
       )
     }
   }
