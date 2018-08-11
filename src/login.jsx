@@ -51,6 +51,7 @@ class LoginAndRegister extends React.Component {
     }
     if(type==="register"){
       console.log('handling register click...')
+      console.log(this.state.repeatPassword)
       fetch('http://10.1.10.41:8080/register', {
         method: "POST",
         headers: {
@@ -96,14 +97,14 @@ class LoginAndRegister extends React.Component {
 
   render(){
     return(
-      <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+      <div style={{display:'flex', flexDirection:'column', alignItems:'center', marginTop:"50px"}}>
         <Typography variant="display2">M<span style={{color:'red'}}>❤</span>L Docs</Typography>
-        <Typography variant="subheading" style={{fontStyle:'italic', color:'red'}}>a text editor for modern humans</Typography>
+        <Typography variant="subheading" style={{fontStyle:'italic', color:'red'}}>a text editor for the modern human</Typography>
         <div style={{display:'flex',  flexDirection:'column', justifyContent:'center', alignItems:'center', marginTop:'10px'}}>
-          <TextField hintText="Username" onChange={e => this.handleChange(e, 'username')} /><br />
-          <TextField hintText="Password" onChange={e => this.handleChange(e, 'password')} /><br />
+          <TextField hintText="Username" onChange={e => this.handleChange(e, 'username')} value={this.state.username}/><br />
+          <TextField hintText="Password" onChange={e => this.handleChange(e, 'password')} value={this.state.password}/><br />
           {(this.state.loginMode===false) ?
-          <TextField hintText="Repeat Password" onChange={e => this.handleChange(e, 'prepeat')} /> :
+          <TextField hintText="Repeat Password" onChange={e => this.handleChange(e, 'repeat')} /> :
           <div></div>}
           {this.state.loginMode ?
             <div style={{display:'flex', flexDirection:'column',  justifyContent:'center'}}>

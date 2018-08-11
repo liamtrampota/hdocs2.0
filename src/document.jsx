@@ -203,7 +203,7 @@ class Document extends React.Component {
               <Home />
             </IconButton>
             <Typography style={{flexGrow:1, marginLeft:"40px", fontFamily: 'Arial', fontSize:'28px'}}>
-              title
+              {this.props.doc.title}
             </Typography>
               <IconButton
                 aria-label='menu-bar'
