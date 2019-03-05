@@ -20,7 +20,7 @@ class LoginAndRegister extends React.Component {
     console.log(this.state.username, this.state.password)
     if(type==="login"){
       console.log('handling login click...')
-      fetch('http://10.1.10.41:8080/login', {
+      fetch(`http://${process.env.SERVER_URI}:8080/login`, {
         method: "POST",
         headers: {
           Accept: 'application/json',
@@ -52,7 +52,7 @@ class LoginAndRegister extends React.Component {
     if(type==="register"){
       console.log('handling register click...')
       console.log(this.state.repeatPassword)
-      fetch('http://10.1.10.41:8080/register', {
+      fetch(`http://${process.env.SERVER_URI}:8080/register`, {
         method: "POST",
         headers: {
           Accept: 'application/json',

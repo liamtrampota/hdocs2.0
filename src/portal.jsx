@@ -16,7 +16,7 @@ import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'dr
 class Portal extends React.Component{
   constructor(props){
     super(props);
-    this.socket = io('http://10.1.10.41:8080');
+    this.socket = io(`http://${process.env.SERVER_URI}:8080`);
     this.state={
       newDocTitle:'',
       mode: 'portal', //portal, document
